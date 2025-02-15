@@ -141,12 +141,16 @@ public class Spdx2SerializationStrategy : IJsonSerializationStrategy
     {
         foreach (var serializer in generationResult.SerializerToJsonDocuments.Keys)
         {
-            foreach (var jsonDocument in generationResult.SerializerToJsonDocuments[serializer])
+            var jsonDocuments = generationResult.SerializerToJsonDocuments[serializer];
+            if (jsonDocuments.Count > 0)
             {
-                serializer.Write(jsonDocument);
+                foreach (var jsonDocument in jsonDocuments)
+                {
+                    serializer.Write(jsonDocument);
+                }
+
+                serializer.EndJsonArray();
             }
         }
-
-        sbomConfig.JsonSerializer.EndJsonArray();
     }
 }
