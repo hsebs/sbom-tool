@@ -145,8 +145,8 @@ public class Spdx2SerializationStrategy : IJsonSerializationStrategy
             {
                 serializer.Write(jsonDocument);
             }
-
-            sbomConfig.JsonSerializer.EndJsonArray();
         }
+
+        sbomConfig.JsonSerializer.EndJsonArray();
     }
 }
