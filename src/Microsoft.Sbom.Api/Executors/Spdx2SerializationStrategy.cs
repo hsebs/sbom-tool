@@ -78,27 +78,63 @@ public class Spdx2SerializationStrategy : IJsonSerializationStrategy
 
         var errors = new List<FileValidationResult>();
 
-        // Files section
+        await WriteFiles(fileArrayGenerator);
+
+        await WritePackages(packageArrayGenerator);
+
+        await WriteExternalDocRefs(externalDocumentReferenceGenerator);
+
+        await WriteRelationships(relationshipsArrayGenerator);
+
+        return errors;
+    }
+
+    /// <summary>
+    /// Write to Files section
+    /// </summary>
+    /// <param name="fileArrayGenerator"></param>
+    /// <returns></returns>
+    private async Task WriteFiles(IJsonArrayGenerator<FileArrayGenerator> fileArrayGenerator)
+    {
         var filesGenerateResult = await fileArrayGenerator.GenerateAsync();
         filesGenerateResult.Errors.AddRange(filesGenerateResult.Errors);
         WriteJsonObjectsFromGenerationResult(filesGenerateResult, fileArrayGenerator.SbomConfig);
+    }
 
-        // Packages section
+    /// <summary>
+    /// Write to Packages section
+    /// </summary>
+    /// <param name="packageArrayGenerator"></param>
+    /// <returns></returns>
+    private async Task WritePackages(IJsonArrayGenerator<PackageArrayGenerator> packageArrayGenerator)
+    {
         var packagesGenerateResult = await packageArrayGenerator.GenerateAsync();
         packagesGenerateResult.Errors.AddRange(packagesGenerateResult.Errors);
         WriteJsonObjectsFromGenerationResult(packagesGenerateResult, packageArrayGenerator.SbomConfig);
+    }
 
-        // External Document Reference section
+    /// <summary>
+    /// Write to External Document Reference section
+    /// </summary>
+    /// <param name="externalDocumentReferenceGenerator"></param>
+    /// <returns></returns>
+    private async Task WriteExternalDocRefs(IJsonArrayGenerator<ExternalDocumentReferenceGenerator> externalDocumentReferenceGenerator)
+    {
         var externalDocumentReferenceGenerateResult = await externalDocumentReferenceGenerator.GenerateAsync();
         externalDocumentReferenceGenerateResult.Errors.AddRange(externalDocumentReferenceGenerateResult.Errors);
         WriteJsonObjectsFromGenerationResult(externalDocumentReferenceGenerateResult, externalDocumentReferenceGenerator.SbomConfig);
+    }
 
-        // Relationships section
+    /// <summary>
+    /// Write to Relationships section
+    /// </summary>
+    /// <param name="relationshipsArrayGenerator"></param>
+    /// <returns></returns>
+    private async Task WriteRelationships(IJsonArrayGenerator<RelationshipsArrayGenerator> relationshipsArrayGenerator)
+    {
         var relationshipGenerateResult = await relationshipsArrayGenerator.GenerateAsync();
         relationshipGenerateResult.Errors.AddRange(relationshipGenerateResult.Errors);
         WriteJsonObjectsFromGenerationResult(relationshipGenerateResult, relationshipsArrayGenerator.SbomConfig);
-
-        return errors;
     }
 
     private void WriteJsonObjectsFromGenerationResult(GenerationResult generationResult, ISbomConfig sbomConfig)
